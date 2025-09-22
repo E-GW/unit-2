@@ -1,8 +1,23 @@
-var map = L.map('map').setView([51.505, -0.09], 13);
+//declare map var in global scope
+var map;
 
-L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-}).addTo(map);
+//function to instantiate the Leaflet map
+function createMap(){
+    //create the map
+    map = L.map('map', {
+        center: [38.8954381, -77.0312812],
+        zoom: 11
+    });
+
+    //add OSM base tilelayer
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+    }).addTo(map);
+
+    //call getData function
+    getData();
+};
 
 /*
 L.tileLayer('https://{s}.tile.thunderforest.com/spinal-map/{z}/{x}/{y}{r}.png', {
@@ -11,36 +26,42 @@ L.tileLayer('https://{s}.tile.thunderforest.com/spinal-map/{z}/{x}/{y}{r}.png', 
 }).addTo(map);
 */
 
-var marker = L.marker([51.5, -0.09]).addTo(map);
+//function to attach popups to each mapped feature
+function onEachFeature(feature, layer) {
+    var popupContent = "";
+    if (feature.properties) {
+        for (var property in feature.properties){
+            popupContent += "<p>" + property + ": " + feature.properties[property] + "</p>";
+        }
+        layer.bindPopup(popupContent);
+    }
+};
 
-var circle = L.circle([51.508, -0.11], {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5,
-    radius: 500
-}).addTo(map);
+//function to retrieve the data and place it on the map
+function getData(){
+    fetch("data/Grocery_Store_Locations.geojson")
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(json){            
+            //marker style
+            var geojsonMarkerOptions = {
+                radius: 3,
+                fillColor: "#ff7800",
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            };
 
-var polygon = L.polygon([
-    [51.509, -0.08],
-    [51.503, -0.06],
-    [51.51, -0.047]
-]).addTo(map);
+            //add GeoJSON layer
+            L.geoJson(json, {
+                pointToLayer: function (feature, latlng){
+                    return L.circleMarker(latlng, geojsonMarkerOptions);
+                },
+                onEachFeature: onEachFeature
+            }).addTo(map);
+        });
+};
 
-marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-circle.bindPopup("I am a circle.");
-polygon.bindPopup("I am a polygon.");
-
-var popup = L.popup()
-    .setLatLng([51.513, -0.09])
-    .setContent("I am a standalone popup.")
-    .openOn(map);
-
-var popup = L.popup();
-
-function onMapClick(e) {
-    popup
-        .setLatLng(e.latlng)
-        .setContent("You clicked the map at " + e.latlng.toString())
-        .openOn(map);
-}
-map.on('click', onMapClick);
+document.addEventListener('DOMContentLoaded', createMap);
