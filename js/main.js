@@ -1,5 +1,8 @@
 //declare map var in global scope
 var map;
+var minValue;
+//Determine the attribute for scaling the proportional symbols
+var attribute = "NUMROOMS";
 
 //function to instantiate the Leaflet map
 function createMap(){
@@ -26,6 +29,8 @@ L.tileLayer('https://{s}.tile.thunderforest.com/spinal-map/{z}/{x}/{y}{r}.png', 
 }).addTo(map);
 */
 
+
+/*
 //function to attach popups to each mapped feature
 function onEachFeature(feature, layer) {
     var popupContent = "";
@@ -36,31 +41,92 @@ function onEachFeature(feature, layer) {
         layer.bindPopup(popupContent);
     }
 };
+*/
 
-//function to retrieve the data and place it on the map
+
+//calculates minimum NUMROOMS value
+function calculateMinValue(data){
+    //create empty array to store all NUMROOMS values
+    var allValues = [];
+
+    //loop through each hotel feature
+    for (var hotel of data.features){
+        var value = hotel.properties["NUMROOMS"];
+        if (value !== null && value !== undefined){
+            allValues.push(Number(value));
+        }
+    }
+    //get minimum value of our array
+    return Math.min(...allValues);
+}
+
+//calculate the radius of each proportional symbol
+function calcPropRadius(attValue) {
+    //constant factor adjusts symbol sizes evenly
+    var minRadius = 5;
+    //Flannery Apperance Compensation formula
+    var radius = 1.0083 * Math.pow(attValue/minValue,0.5715) * minRadius
+
+    return radius;
+};
+
+
+//function to convert hotels to circle markers
+function pointToLayer(feature, latlng){
+    var attValue = Number(feature.properties[attribute]);
+
+    var options = {
+        fillColor: "#ff7800",
+        color: "#000",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8,
+        radius: calcPropRadius(attValue)
+    };
+
+    var layer = L.circleMarker(latlng, options);
+
+    //popup with hotel name + rooms
+    var popupContent = "<p><b>Hotel:</b> " + (feature.properties.NAME || "Unknown") + "</p>"
+                     + "<p><b>Rooms:</b> " + attValue + "</p>";
+
+    layer.bindPopup(popupContent);
+
+    return layer;
+};
+
+
+//Create new sequence controls (slider UI)
+function createSequenceControls(){
+    //create range input element (slider)
+    var slider = "<input class='range-slider' type='range'></input>";
+    document.querySelector("#panel").insertAdjacentHTML('beforeend',slider);
+
+    //set slider attributes
+    document.querySelector(".range-slider").max = 168;
+    document.querySelector(".range-slider").min = 0;
+    document.querySelector(".range-slider").value = 0;
+    document.querySelector(".range-slider").step = 1;
+
+    //add step buttons
+    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse</button>');
+    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward</button>');
+};
+
+
+//fetch the data and add proportional symbols
 function getData(){
-    fetch("data/Grocery_Store_Locations.geojson")
-        .then(function(response){
-            return response.json();
-        })
-        .then(function(json){            
-            //marker style
-            var geojsonMarkerOptions = {
-                radius: 3,
-                fillColor: "#ff7800",
-                color: "#000",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            };
+    fetch("data/Hotels.geojson")
+        .then(response => response.json())
+        .then(json => {   
+            minValue = calculateMinValue(json);
 
-            //add GeoJSON layer
             L.geoJson(json, {
-                pointToLayer: function (feature, latlng){
-                    return L.circleMarker(latlng, geojsonMarkerOptions);
-                },
-                onEachFeature: onEachFeature
+                pointToLayer: pointToLayer
             }).addTo(map);
+
+            // add slider after symbols load
+            createSequenceControls();
         });
 };
 
