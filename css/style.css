@@ -2,6 +2,10 @@
     height: 400px;    
     width: 70%;
     display: inline-block;
+    padding: 4px; 
+    background-color: white; 
+    border: 1px solid #000000; 
+    border-radius: 4px;
     }
 
 #panel {    
@@ -13,6 +17,12 @@
         line-height: 42px;
 }
 
+#h1 {
+    margin-left: 50;
+}
+
+
+/*Slider*/
 .range-slider {  
     width: 50%;  
 }  
@@ -37,4 +47,75 @@
     margin: 0.2em 0;
 }
 
-    
+
+
+
+/*Radio group container */
+.color-mode {
+  margin-top: 14px;
+  line-height: 1.4;
+  text-align: left;
+}
+.color-mode label {
+  display: block;
+  cursor: pointer;
+  margin: 2px 0;
+}
+
+/* Month label */
+#month-label {
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+
+
+
+/* Legend */
+#legend {
+  margin-top: 12px;
+  text-align: left;
+}
+
+/* Automatically hides the legend, only showing it when the symbology is set to "Color by Vehicle Count"*/
+#legend.is-hidden {     
+  display: none;
+}
+
+#legend h4 {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+}
+
+/* make items flow into two columns */
+#legend .legend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 columns */
+  gap: 4px 12px; /* row-gap and column-gap */
+}
+
+#legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 2px 0;
+}
+
+#legend .swatch {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  border-radius: 3px;
+  border: 1px solid #999;
+}
+
+/* swatch colors (match your marker colors) */
+.swatch--violet { background: #e4e4e4; }
+.swatch--violet { background: #7634CD; }
+.swatch--indigo { background: #273ED7; }
+.swatch--blue   { background: #20A9ED; }
+.swatch--green  { background: #42DC6E; }
+.swatch--yellow { background: #FFF646; }
+.swatch--orange { background: #FF9900; }
+.swatch--red    { background: #DC4A42; }
+.swatch--black  { background: #181818; }
