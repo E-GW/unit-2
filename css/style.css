@@ -1,11 +1,18 @@
+
+body { 
+    background-color: rgba(133, 196, 137, 0.637); 
+    }
+
+/* map frame styling*/
 #map {    
-    height: 400px;    
-    width: 70%;
+    height: 400px;
+    width: 99.5%;
     display: inline-block;
     padding: 4px; 
+    margin-bottom: -70px;
     background-color: white; 
-    border: 1px solid #000000; 
-    border-radius: 4px;
+    border: 1.5px solid #000000; 
+    border-radius: 14px;
     }
 
 #panel {    
@@ -21,14 +28,44 @@
     margin-left: 50;
 }
 
+h3 {
+    font-style: italic;
+}
+
+h4 {
+    margin-bottom: -17px;
+}
+
+
+/* reset-view button*/
+.reset-view-btn {
+  background: white;
+  border: none;
+  font-size: 26px;
+  font-weight:bolder;
+  width: 34px;
+  height: 34px;
+  line-height: 0px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.reset-view-btn:hover {
+  background: #f0f0f0;
+}
+
+
+
 
 /*Slider*/
 .range-slider {  
     width: 50%;  
 }  
 
+/* width of slider buttons*/
 .step {  
-    width: 20%;  
+    width: 21%;  
 }  
 
 .step img {  
@@ -50,7 +87,7 @@
 
 
 
-/*Radio group container */
+/* color mode buttons and month display syling*/
 .color-mode {
   margin-top: 14px;
   line-height: 1.4;
@@ -65,57 +102,133 @@
 /* Month label */
 #month-label {
   font-weight: 700;
-  margin-top: 12px;
+  font-size: 18pt;
+  margin-top: -5px;
 }
 
 
 
 
-/* Legend */
+
+/* legend and Time Sequence controls*/
 #legend {
   margin-top: 12px;
   text-align: left;
 }
 
-/* Automatically hides the legend, only showing it when the symbology is set to "Color by Vehicle Count"*/
-#legend.is-hidden {     
+/* automatically hides the legend, only showing it when the symbology is set to "Color by Crash Size"*/
+.is-hidden {     
   display: none;
 }
 
-#legend h4 {
-  margin: 0 0 6px 0;
+/* "Crashes this Month" styling*/
+#crash-count {
   font-size: 14px;
+  color: #444;
+  margin-bottom: 6px;
 }
 
-/* make items flow into two columns */
-#legend .legend-grid {
+#vehicle-count {
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+/* "Crash Size Colors" styling*/
+#legend h4 {
+  margin: -15px 10px 6px 10px;
+  font-size: 15px;
+}
+
+#legend h5 {
+  font-weight: lighter;
+  margin: -3px 10px 6px 10px;
+}
+
+
+/* legend background frame*/
+.sequence-control {
+  background: rgba(216, 213, 213, 0.95);
+  padding: 10px;
+  font-size: 14px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.4);
+  border-radius: 5px;
+  max-width: 300px;
+}
+
+/* slider styling*/
+.slider-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;   /* spacing on either side of the slider slider*/
+  margin-bottom: 8px;   /* margin spacing under the slider*/
+}
+
+/* makes slider flexible*/
+.sequence-control input[type="range"] {
+  flex: 1;
+}
+
+/* controls the spacing margins on the legend*/
+.color-mode {
+  margin: 10px 0;
+}
+
+
+.sequence-control,
+.legend-control {
+  background: rgba(218, 234, 212, 0.95);
+  padding: 10px;
+  font-size: 13px;
+  box-shadow: 0 0 4px rgba(232, 238, 230, 0.4);
+  border-radius: 5px;
+  max-width: 300px;
+}
+
+/* aranges the legend items in two verticle lines*/
+.legend-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 2 columns */
-  gap: 4px 12px; /* row-gap and column-gap */
+  grid-template-columns: repeat(2, auto);
+  gap: 6px;
 }
 
-#legend .legend-item {
+/* controls spacing for the legend color swatches*/
+.legend-item {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin: 2px 0;
 }
 
-#legend .swatch {
-  width: 15px;
-  height: 15px;
+.legend-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-btn--inactive {
+  opacity: 0.4;
+}
+
+
+/* displays colors swatches on the legend*/
+.swatch {
+  width: 16px;
+  height: 16px;
   display: inline-block;
-  border-radius: 3px;
-  border: 1px solid #999;
+  border: 1px solid #333;
 }
 
-/* swatch colors (match your marker colors) */
-.swatch--violet { background: #e4e4e4; }
-.swatch--violet { background: #7634CD; }
-.swatch--indigo { background: #273ED7; }
-.swatch--blue   { background: #20A9ED; }
-.swatch--green  { background: #42DC6E; }
+/* legend swatch colors*/
+.swatch--white { background: #e7e7e7ff; }
 .swatch--yellow { background: #FFF646; }
-.swatch--orange { background: #FF9900; }
-.swatch--red    { background: #DC4A42; }
-.swatch--black  { background: #181818; }
+.swatch--violet { background: #7634CD; }
+.swatch--orange { background: #ff6a00ff; }
+.swatch--indigo { background: #273ED7; }
+.swatch--red    { background: #be3838ff; }
+.swatch--blue   { background: #20A9ED; }
+.swatch--black  { background: #000000ff; }
+.swatch--green  { background: #42DC6E; }
